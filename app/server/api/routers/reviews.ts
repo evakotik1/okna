@@ -5,7 +5,7 @@ import { reviews } from "../../db/schema"
 import { db } from "../../db"
 import { userServise } from "./user"
 import { DEFAULT_TTL, InvalidateCached, ServeCached } from "../../redis"
-import { reviewsSchema } from "@/src/lib/shared/schemas/reviews"
+import { reviewsSchema } from "@/app/lib/shared/schemas/reviews"
 
 
 export const reviewsRouter = new Elysia({

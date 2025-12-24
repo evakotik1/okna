@@ -5,7 +5,7 @@ import { calculation } from "../../db/schema"
 import { db } from "../../db"
 import { userServise } from "./user"
 import { DEFAULT_TTL, InvalidateCached, ServeCached } from "../../redis"
-import { calculationSchema } from "@/src/lib/shared/schemas/calculation"
+import { calculationSchema } from "@/app/lib/shared/schemas/calculation"
 
 
 export const calculationRouter = new Elysia({

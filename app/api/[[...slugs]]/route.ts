@@ -1,4 +1,5 @@
-import { app } from "@/src/server/api";
+import { app } from "@/app/server/api";
+
 
 export const GET = app.handle;
 export const POST = app.handle;

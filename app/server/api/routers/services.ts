@@ -3,7 +3,7 @@ import Elysia from "elysia"
 import z from "zod"
 import { services } from "../../db/schema"
 import { db } from "../../db"
-import { serviceSchema } from "@/src/lib/shared/schemas/services"
+import { serviceSchema } from "@/app/lib/shared/schemas/services"
 import { userServise } from "./user"
 import { DEFAULT_TTL, InvalidateCached, ServeCached } from "../../redis"
 

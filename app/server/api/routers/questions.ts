@@ -5,7 +5,7 @@ import { questions } from "../../db/schema"
 import { db } from "../../db"
 import { userServise } from "./user"
 import { DEFAULT_TTL, InvalidateCached, ServeCached } from "../../redis"
-import { questionsSchema } from "@/src/lib/shared/schemas/questions"
+import { questionsSchema } from "@/app/lib/shared/schemas/questions"
 
 
 export const questionsRouter = new Elysia({

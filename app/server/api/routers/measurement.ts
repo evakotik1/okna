@@ -3,7 +3,7 @@ import Elysia from "elysia"
 import z from "zod"
 import { measurement } from "../../db/schema"
 import { db } from "../../db"
-import { measurementSchema } from "@/src/lib/shared/schemas/measuremen"
+import { measurementSchema } from "@/app/lib/shared/schemas/measuremen"
 import { userServise } from "./user"
 import { DEFAULT_TTL, InvalidateCached, ServeCached } from "../../redis"
 
