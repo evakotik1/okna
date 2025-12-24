@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: "okna"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+    restart: always
+  minio: 
+    image: "minio/minio:latest"
+    ports: 
+      - "9000:9000"
+      - "9090:9090"
+    environment: 
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "12345678"
+    volumes: 
+      - "minio:/data/minio"
+    command: minio server /data/minio --console-address ":9090"
+    restart: always
+volumes:
+  minio:

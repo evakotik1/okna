@@ -1,5 +1,7 @@
 {
   "name": "okna",
+  "module": "index.ts",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,19 +10,48 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@pbe/react-yandex-maps": "^1.2.5",
+    "@types/mime-types": "^3.0.1",
+    "better-auth": "^1.4.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
+    "elysia": "^1.4.19",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "lucide-react": "^0.559.0",
+    "mime-types": "^3.0.2",
     "next": "16.0.8",
+    "pg": "^8.16.3",
+    "plaiceholder": "^3.0.0",
     "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "react-dom": "19.2.1",
+    "react-hook-form": "^7.69.0",
+    "sharp": "^0.34.5",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
+    "@types/bun": "latest",
     "@types/node": "^20",
+    "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.22",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9",
     "eslint-config-next": "16.0.8",
-    "tailwindcss": "^4",
+    "postcss": "^8.5.6",
+    "prettier": "^3.7.4",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
