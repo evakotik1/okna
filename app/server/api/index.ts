@@ -1,4 +1,5 @@
 import Elysia from "elysia";
+import { treaty } from "@elysiajs/eden";
 import { measurementRouter } from "./routers/measurement"
 import { calculationRouter } from "./routers/calculation"
 import { reviewsRouter } from "./routers/reviews"
@@ -23,3 +24,6 @@ export const app = new Elysia({
 .use(productsRouter)
 .use(servicesRouter)
 .use(fileRouter)
+
+export type App = typeof app;
+export const api = treaty(app).api;

@@ -78,6 +78,66 @@
   }
 }
 
-.ymaps-2-1-79-map {
-  
+/* .ymaps-2-1-79-map {
+  filter: grayscale(100%) brightness(0.9);
+} */
+
+/* Убираем brightness и contrast - оставляем только grayscale */
+.ymaps-2-1-79-ground-pane {
+  filter: grayscale(100%) !important;
+  /* brightness(1) и contrast(1) - это нормальные значения (без изменений) */
 }
+
+/* Названия улиц - чёрные и чёткие */
+.ymaps-2-1-79-map text,
+.ymaps-2-1-79-placemark__caption,
+.ymaps-2-1-79-gototech__title {
+  fill: #000000 !important;
+  stroke: #000000 !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Дороги - белые */
+.ymaps-2-1-79-islands-road,
+path[stroke="#ffffff"],
+path[d^="M"] {
+  stroke: #ffffff !important;
+  stroke-width: 1.5px !important;
+}
+
+/* Вода - светло-серая */
+[fill="#a3ccff"],
+.ymaps-2-1-79-water {
+  fill: #e8e8e8 !important;
+}
+
+/* Парки/зелень - чуть темнее */
+[fill="#b3e2a7"],
+.ymaps-2-1-79-green {
+  fill: #d0d0d0 !important;
+}
+
+/* Здания - светло-серые */
+.ymaps-2-1-79-building {
+  fill: #f0f0f0 !important;
+  stroke: #dddddd !important;
+}
+
+/* Точки - ОРАНЖЕВЫЕ (убираем grayscale для них) */
+.ymaps-2-1-79-places-pane,
+.ymaps-2-1-79-placemark-overlay,
+circle {
+  filter: none !important;
+}
+
+/* Оранжевые кружки точек */
+circle[cx][cy],
+[fill="#ff8663"],
+.ymaps-2-1-79-placemark__icon {
+  fill: #ff6b35 !important;
+  stroke: #ff6b35 !important;
+}
+
+

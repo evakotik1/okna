@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import QuestionsForm from "./forms/questionsForm"
 
 export default function Contacts() {
   return (
@@ -56,8 +57,8 @@ export default function Contacts() {
 
           </div>
           
-          <div className="bg-gray-100 p-8 border border-gray-300 flex items-center justify-center min-h-[300px] md:min-h-[400px] rounded-lg mb-8 md:mb-0">
-            <p className="text-gray-500 text-center text-sm md:text-base"> Здесь может быть карта или форма обратной связи </p>
+          <div className="bg-gray-100 border border-gray-300 flex items-center justify-center min-h- max-w-[500px] [300px] md:min-h-[400px] rounded-lg mb-8 md:mb-0">
+            <QuestionsForm/>
           </div>
         </div>
       </div>

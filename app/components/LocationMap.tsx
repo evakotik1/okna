@@ -42,8 +42,10 @@ export default function LocationMap() {
                                         key={workshop.id}
                                         geometry={workshop.coordinates}
                                         options={{
-                                            preset: "islands#orangeIcon",
-                                            iconColor: "#ff6b00",
+                                            iconLayout: 'default#image',
+                                            iconImageHref: '/geo.svg',
+                                            iconImageSize: [30, 35],
+                                            iconImageOffset: [-20, -40],
                                         }}
                                     />
                                 ))}

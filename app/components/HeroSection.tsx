@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import MeasurementForm from "./forms/measurementForm"
 
 export default function HeroSection() {
   return (
@@ -56,13 +57,14 @@ export default function HeroSection() {
 
               <div className="relative w-full max-w-[428px] md:mb-0 mb-16">
                 
-                <div className="bg-white w-full h-[350px] md:h-[406px] flex items-center justify-center rounded-xl">
-                  <div className="text-center p-4 md:p-8">
+                <div className="bg-white w-full h-[450px] md:h-[456px] flex items-center justify-center rounded-xl">
+                  {/* <div className="text-center p-4 md:p-8">
                     <p className="text-sm md:text-base">Форма</p>
-                  </div>
+                  </div> */}
+                  <MeasurementForm />
                 </div>
                 
-                <div className="absolute top-64 md:top-72 left-1/2 transform -translate-x-1/2 ml-2 z-10">
+                <div className="absolute top-[35px] md:top-[340px] left-1/2 transform -translate-x-1/2 ml-2 z-10">
                   <div className="w-[370px] h-[160px] md:w-[470px] md:h-[200px]">
                     <Image src="/rulerNEW.svg" alt="bannerRuler" fill className="w-full h-full object-contain" />
                   </div>
