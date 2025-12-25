@@ -10,12 +10,12 @@ import {
 	FormLabel,
 	FormControl,
 	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/components/ui/form";
+import { Input } from "@/app/components/ui/input";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import { api } from "@/app/lib/client/api";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/app/components/ui/checkbox";
 
 const measurementSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),

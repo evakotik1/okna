@@ -1,4 +1,4 @@
-import { varchar, text, timestamp, boolean, pgTable, integer } from "drizzle-orm/pg-core"
+import { varchar, text, timestamp, boolean, pgTable, integer, pgEnum } from "drizzle-orm/pg-core"
 export * from "./auth-schema"
 
 export const commonFields = {
@@ -20,6 +20,8 @@ export const commonFields = {
 //     phone: varchar({ length: 255 }).notNull(),
 // })
 
+export const statusEnum = pgEnum("status_enum", ["PROCESSING", "COMPLETED"]);
+
 
 export const measurement = pgTable("measurement", {
     ...commonFields,
@@ -28,7 +30,7 @@ export const measurement = pgTable("measurement", {
     phone: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
     consent: boolean().default(false).notNull(),
-    status: varchar('status', { length: 50 }).default('new'),
+    status: statusEnum("status").default("PROCESSING"),
 
 });
 

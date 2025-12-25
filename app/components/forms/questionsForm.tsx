@@ -3,11 +3,18 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Form as ShadcnForm, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
+import {
+	Form as ShadcnForm,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormControl,
+	FormMessage,
+} from "@/app/components/ui/form";
+import { Input } from "@/app/components/ui/input";
+import { Textarea } from "@/app/components/ui/textarea";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import { Button } from "@/app/components/ui/button";
 import { useState } from "react";
 
 type questionsFormData = {
@@ -18,24 +25,24 @@ type questionsFormData = {
 };
 
 const api = {
-    forms: {
-        questions: async (data: questionsFormData) => {
-            const response = await fetch("/api/questions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
+	forms: {
+		questions: async (data: questionsFormData) => {
+			const response = await fetch("/api/questions", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
 
-            const result = await response.json();
-            
-            return {
-                error: !response.ok,
-                data: result
-            };
-        }
-    }
+			const result = await response.json();
+
+			return {
+				error: !response.ok,
+				data: result,
+			};
+		},
+	},
 };
 
 const questionsFormSchema = z.object({
@@ -68,19 +75,19 @@ export default function QuestionsForm() {
 		try {
 			const requestData = {
 				...data,
-				status: 'new' as const
+				status: "new" as const,
 			};
-			
+
 			const result = await api.forms.questions(requestData);
-			
+
 			// if (result.error) {
 			// 	throw new Error("Ошибка при отправке");
 			// }
-			
+
 			form.reset();
 			setIsSuccess(true);
 			alert("Сообщение отправлено!");
-			
+
 			setTimeout(() => setIsSuccess(false), 3000);
 		} catch (error) {
 			alert("Ошибка отправки");
@@ -92,15 +99,21 @@ export default function QuestionsForm() {
 	return (
 		<div className="w-full mx-auto p-12 flex flex-col gap-6">
 			<h2 className="text-2xl font-bold text-center">Остались вопросы?</h2>
-			
+
 			<ShadcnForm {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-					<FormField control={form.control} name="name" render={({ field }) => (
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="flex flex-col gap-5"
+				>
+					<FormField
+						control={form.control}
+						name="name"
+						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Input 
-										placeholder="Ваше имя" 
-										{...field} 
+									<Input
+										placeholder="Ваше имя"
+										{...field}
 										className="h-14 pl-4 bg-[#E2E2E2] placeholder:text-[#424268]"
 									/>
 								</FormControl>
@@ -109,13 +122,16 @@ export default function QuestionsForm() {
 						)}
 					/>
 
-					<FormField control={form.control} name="email" render={({ field }) => (
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Input 
+									<Input
 										type="email"
-										placeholder="Email" 
-										{...field} 
+										placeholder="Email"
+										{...field}
 										className="h-14 pl-4 bg-[#E2E2E2] placeholder:text-[#424268] "
 									/>
 								</FormControl>
@@ -124,12 +140,15 @@ export default function QuestionsForm() {
 						)}
 					/>
 
-					<FormField control={form.control} name="message" render={({ field }) => (
+					<FormField
+						control={form.control}
+						name="message"
+						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Textarea 
-										placeholder="Ваш отзыв" 
-										{...field} 
+									<Textarea
+										placeholder="Ваш отзыв"
+										{...field}
 										className="min-h-[120px] pl-4 pt-3 bg-[#E2E2E2] placeholder:text-[#424268]"
 									/>
 								</FormControl>
@@ -138,37 +157,52 @@ export default function QuestionsForm() {
 						)}
 					/>
 
-					<FormField control={form.control} name="consent" render={({ field }) => (
-						<FormItem className="flex flex-col gap-2">
-							<div className="flex flex-row items-center gap-3">
-								<FormControl>
-									<Checkbox
-										checked={field.value}
-										onCheckedChange={(checked) => {
-											field.onChange(checked === true);
-										}}
-										className="bg-[#E2E2E2] 
+					<FormField
+						control={form.control}
+						name="consent"
+						render={({ field }) => (
+							<FormItem className="flex flex-col gap-2">
+								<div className="flex flex-row items-center gap-3">
+									<FormControl>
+										<Checkbox
+											checked={field.value}
+											onCheckedChange={(checked) => {
+												field.onChange(checked === true);
+											}}
+											className="bg-[#E2E2E2] 
 										data-[state=checked]:bg-white 
 										data-[state=checked]:text-black"
-									/>
-								</FormControl>
-								<div className="space-y-1 leading-none">
-									<FormLabel className="text-sm font-normal"> 
-										Я согласен(на) на обработку{' '}
-										<a href="/" className="text-orange-500 font-bold" target="_blank">
-											персональных данных
-										</a>
-									</FormLabel>
+										/>
+									</FormControl>
+									<div className="space-y-1 leading-none">
+										<FormLabel className="text-sm font-normal">
+											Я согласен(на) на обработку{" "}
+											<a
+												href="/"
+												className="text-orange-500 font-bold"
+												target="_blank"
+											>
+												персональных данных
+											</a>
+										</FormLabel>
+									</div>
 								</div>
-							</div>
-							<FormMessage className="text-sm text-center" />
-						</FormItem>
-					)}/>
-
+								<FormMessage className="text-sm text-center" />
+							</FormItem>
+						)}
+					/>
 
 					<div className="flex justify-center pt-2">
-						<Button type="submit" className="bg-[#2F2F51] py-4 px-10 w-full max-w-[280px] text-white font-medium hover:bg-[#4C4C79] transition-colors" disabled={isLoading || isSuccess} >
-							{isLoading ? "Отправка..." : isSuccess ? "Отправлено!" : "Отправить сообщение"}
+						<Button
+							type="submit"
+							className="bg-[#2F2F51] py-4 px-10 w-full max-w-[280px] text-white font-medium hover:bg-[#4C4C79] transition-colors"
+							disabled={isLoading || isSuccess}
+						>
+							{isLoading
+								? "Отправка..."
+								: isSuccess
+									? "Отправлено!"
+									: "Отправить сообщение"}
 						</Button>
 					</div>
 				</form>
