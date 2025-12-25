@@ -13,6 +13,12 @@ export const measurementRouter = new Elysia({
 })
 .use(userServise)
 
+.get("/", async () => {
+  return await db.query.measurement.findMany({
+    orderBy: (measurement, { desc }) => [desc(measurement.createdAt)]
+  })
+})
+
 
 .post("/", async ({body}) => {
   const result = await db.insert(measurement).values(body).returning();
