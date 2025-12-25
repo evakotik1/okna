@@ -18,6 +18,8 @@ import pic4 from "@/public/pic4.svg"
 import pic5 from "@/public/pic5.svg"
 import pic6 from "@/public/pic6.svg"
 import Carousel from "@/app/components/ui/Carousel"
+import MeasurementModalForm from "./forms/measurementModalForm"
+import CalculationModalForm from "./forms/CalculationModalForm"
 
 const servicesData = [
 {
@@ -196,8 +198,11 @@ return (
                                 <h2 className="text-xl md:text-2xl font-bold">{service.title}</h2>
                                 <p className="text-sm md:text-base max-w-[350px]">{service.description}</p>
                                 <div className="flex gap-3">
-                                    <p className="font-bold text-base md:text-xl">КНОПКА</p> 
-                                    <p className="font-bold text-base md:text-xl">КНОПКА</p>
+                                    <MeasurementModalForm />
+                                    <CalculationModalForm 
+                                        className="max-w-[170px]"
+                                        buttonText="Заказать расчет"
+                                    />
                                 </div>
                             </div>
                         </div>

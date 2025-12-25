@@ -9,6 +9,7 @@ import Cup from "@/public/Cup.svg"
 import liftingCrane from "@/public/liftingCrane.svg"
 import windows from "@/public/windows.svg"
 import Logo from "@/public/LogoSchtandart 1.svg"
+import CalculationModalForm from "./forms/CalculationModalForm"
 
 interface Product {
   id: number
@@ -307,6 +308,14 @@ export default function Products() {
             </div>
           </div>
         </div>
+
+        <div className="flex justify-center items-center py-8">
+          <CalculationModalForm 
+            className="max-w-[300px] "
+            buttonText="Рассчитать стоимость"
+        />
+        </div>
+        
       </div>
 
     </section>

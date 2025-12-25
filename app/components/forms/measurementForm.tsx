@@ -1,34 +1,45 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
+import { unknown, z } from "zod/v4";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form as ShadcnForm, FormField, FormItem, FormLabel, FormControl, FormMessage} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { api } from "@/app/server/api";
+import { api } from "@/app/lib/client/api";
+
 
 const measurementSchema = z.object({
     name: z.string().min(2, "Имя слишком короткое"),
     phone: z.string().min(11, "Номер телефона должен содержать минимум 11 цифр"),
-    email: z.email("Введите корректный email"),
-    consent: z.boolean().default(false)
+    email: z.email("Введите корректный email"), 
+    consent: z.boolean().refine((val) => val === true, {
+        message: "Необходимо согласие на обработку данных",
+    }),
 });
 
 type FormData = z.infer<typeof measurementSchema>;
 
-export default function measurementForm() {
+export default function MeasurementForm() {
     const queryClient = useQueryClient();
+
 
     const form = useForm<FormData>({
         resolver: zodResolver(measurementSchema),
-        defaultValues: {} as z.infer<typeof measurementSchema>,
+        defaultValues: {} as unknown as FormData,
     });
 
     const submitMutation = useMutation({
         mutationFn: async (data: FormData) => {
-            const result = await api.measurement.post(data)
+			const requestData = {
+                ...data,
+                status: 'processing' as const,
+            };
+            
+            console.log("Отправляю данные:", requestData);
+
+            const result = await api.measurement.post(requestData)
             if(result.error){
                 throw Error("error")
             }
@@ -60,7 +71,6 @@ export default function measurementForm() {
     return `${cleaned.slice(0, 1)} (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9)}`;
     };
 
-
 	return (
 		<div className="w-full px-10 flex flex-col gap-5 md:-mt-4">
 			<h1 className="text-xl font-bold text-center">Вызвать замерщика</h1>
@@ -70,7 +80,7 @@ export default function measurementForm() {
 					<FormField control={form.control} name="name" render={({ field }) => (
 							<FormItem>
 									<FormControl>
-										<Input placeholder="Представьтесь пожалуйста" {...field} className="h-11 pl-4 bg-[#E2E2E2] placeholder:text-[#424268]"/>
+										<Input placeholder="Представьтесь пожалуйста" {...field} className="h-11 pl-4 bg-[#E2E2E2] placeholder:text-[#424268] placeholder:text-[16.5px]"/>
 									</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -88,7 +98,7 @@ export default function measurementForm() {
 											field.onChange(formatted);
 										}}
 										value={field.value}
-										className="h-11 pl-4 bg-[#E2E2E2] placeholder:text-[#424268]" />
+										className="h-11 pl-4 bg-[#E2E2E2] placeholder:text-[#424268] placeholder:text-[16.5px]" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -103,7 +113,7 @@ export default function measurementForm() {
 										type="email"
 										placeholder="Email" 
 										{...field} 
-										className="h-11 px-4 bg-[#E2E2E2] placeholder:text-[#424268]"
+										className="h-11 px-4 bg-[#E2E2E2] placeholder:text-[#424268] placeholder:text-[16.5px]"
 									/>
 								</FormControl>
 								<FormMessage />
@@ -115,21 +125,26 @@ export default function measurementForm() {
 						control={form.control}
 						name="consent"
 						render={({ field }) => (
-							<FormItem className="flex flex-row gap-4 items-center justify-center">
-								<FormControl>
-									<Checkbox
-										checked={field.value}
-										onCheckedChange={(checked) => {
-											field.onChange(checked === true);
-										}}
-									/>
-								</FormControl>
-								<div className="space-y-1 leading-none">
-									<FormLabel className="text-[12px] font-normal"> Согласен на обработку персональных данных в соответствии с{' '}
-										<a href="/" className="text-blue-600" target="_blank"> политикой конфиденциальности </a>
-									</FormLabel>
+							<FormItem className="flex flex-col gap-2">
+								<div className="flex flex-row gap-4 items-center justify-center">
+									<FormControl>
+										<Checkbox
+											checked={field.value}
+											onCheckedChange={(checked) => {
+												field.onChange(checked); 
+											}}
+										/>
+									</FormControl>
+									<div className="space-y-1 leading-none">
+										<FormLabel className="text-[12px] font-normal"> 
+											Согласен на обработку персональных данных в соответствии с{' '}
+											<a href="/" className="text-blue-600" target="_blank">
+												политикой конфиденциальности
+											</a>
+										</FormLabel>
+									</div>
 								</div>
-								<FormMessage />
+								<FormMessage className="text-[12px] text-center" />
 							</FormItem>
 						)}
 					/>
@@ -140,7 +155,7 @@ export default function measurementForm() {
 						className="bg-orange-500 py-5 px-10 w-[200px] text-white items-center text-sm hover:bg-orange-600 transition-colors" 
 						disabled={submitMutation.isPending}
 					>
-						{submitMutation.isPending ? "Отправка..." : "Отправить"}
+						{submitMutation.isPending ? "Отправка..." : "Отправить заявку"}
 					</Button>
 				</div>
 				</form>

@@ -28,7 +28,10 @@ export const measurement = pgTable("measurement", {
     phone: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
     consent: boolean().default(false).notNull(),
+    status: varchar('status', { length: 50 }).default('new'),
+
 });
+
 
 
 export const calculation = pgTable("calculation", {
@@ -38,6 +41,7 @@ export const calculation = pgTable("calculation", {
     phone: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
     consent: boolean().default(false).notNull(),
+    status: varchar('status', { length: 50 }).default('new'),
 });
 
 
@@ -49,6 +53,7 @@ export const reviews = pgTable("reviews", {
     email: varchar({ length: 255 }).notNull(),
     review: text("review").notNull(),
     consent: boolean().default(false).notNull(),
+    status: varchar('status', { length: 50 }).default('new'),
 });
 
 
@@ -58,7 +63,8 @@ export const questions = pgTable("questions", {
     name: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
     message: text("message").notNull(),
-    consent: boolean().default(false).notNull()
+    consent: boolean().default(false).notNull(),
+    status: varchar('status', { length: 50 }).default('new'),
 });
 
 

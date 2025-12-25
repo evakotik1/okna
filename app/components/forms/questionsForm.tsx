@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-type ContactFormData = {
+type questionsFormData = {
 	name: string;
 	email: string;
 	message: string;
@@ -19,8 +19,8 @@ type ContactFormData = {
 
 const api = {
     forms: {
-        contact: async (data: ContactFormData) => {
-            const response = await fetch("/api/contact", {
+        questions: async (data: questionsFormData) => {
+            const response = await fetch("/api/questions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const api = {
     }
 };
 
-const contactFormSchema = z.object({
+const questionsFormSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
 	email: z.string().email("Введите корректный email"),
 	message: z.string().min(10, "Сообщение должно содержать минимум 10 символов"),
@@ -47,14 +47,14 @@ const contactFormSchema = z.object({
 	}),
 });
 
-type ContactFormValues = z.infer<typeof contactFormSchema>;
+type questionsFormValues = z.infer<typeof questionsFormSchema>;
 
 export default function QuestionsForm() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 
-	const form = useForm<ContactFormValues>({
-		resolver: zodResolver(contactFormSchema),
+	const form = useForm<questionsFormValues>({
+		resolver: zodResolver(questionsFormSchema),
 		defaultValues: {
 			name: "",
 			email: "",
@@ -63,14 +63,19 @@ export default function QuestionsForm() {
 		},
 	});
 
-	const onSubmit = async (data: ContactFormValues) => {
+	const onSubmit = async (data: questionsFormValues) => {
 		setIsLoading(true);
 		try {
-			const result = await api.forms.contact(data);
+			const requestData = {
+				...data,
+				status: 'new' as const
+			};
 			
-			if (result.error) {
-				throw new Error("Ошибка при отправке");
-			}
+			const result = await api.forms.questions(requestData);
+			
+			// if (result.error) {
+			// 	throw new Error("Ошибка при отправке");
+			// }
 			
 			form.reset();
 			setIsSuccess(true);
@@ -134,24 +139,31 @@ export default function QuestionsForm() {
 					/>
 
 					<FormField control={form.control} name="consent" render={({ field }) => (
-							<FormItem className="flex flex-row items-start gap-3">
+						<FormItem className="flex flex-col gap-2">
+							<div className="flex flex-row items-center gap-3">
 								<FormControl>
 									<Checkbox
 										checked={field.value}
 										onCheckedChange={(checked) => {
 											field.onChange(checked === true);
 										}}
+										className="bg-[#E2E2E2] 
+										data-[state=checked]:bg-white 
+										data-[state=checked]:text-black"
 									/>
 								</FormControl>
 								<div className="space-y-1 leading-none">
-								<FormLabel className="text-sm font-normal"> Я согласен(на) на обработку{' '}
-										<a href="/" className="text-orange-500 font-bold" target="_blank"> персональных данных </a>
+									<FormLabel className="text-sm font-normal"> 
+										Я согласен(на) на обработку{' '}
+										<a href="/" className="text-orange-500 font-bold" target="_blank">
+											персональных данных
+										</a>
 									</FormLabel>
 								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+							</div>
+							<FormMessage className="text-sm text-center" />
+						</FormItem>
+					)}/>
 
 
 					<div className="flex justify-center pt-2">

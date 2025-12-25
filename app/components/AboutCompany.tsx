@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import MeasurementModalForm from "./forms/measurementModalForm"
+import ReviewModalForm from "./forms/reviewModalForm"
 
 const aboutTabs = [
   { id: "description", label: "Описание" },
@@ -172,10 +174,7 @@ export default function Products() {
                   <h3 className="text-[18px] font-bold">{reviewsData[reviewIndex].author}</h3>
                   <p className="text-[#8F8F8F] text-[14px]">{reviewsData[reviewIndex].contract}</p>
                 </div>
-                <button onClick={handleLeaveReview} className="flex items-center justify-center gap-4 px-8 py-2 md:py-4 bg-orange-500 text-white rounded-sm  w-full md:w-auto mt-4 md:mt-0" >
-                  <Image src="/addReview.svg" alt="addReview" width={20} height={20} /> 
-                  <p className="text-sm md:text-base">Оставить отзыв</p>
-                </button>
+                <ReviewModalForm />
               </div>
               
               <div className="relative flex">
@@ -232,7 +231,7 @@ export default function Products() {
               </div>
 
               <div className="flex gap-4 md:gap-6 items-start">
-                <Image src="/pricing.svg" alt="pricing" width={80} height={55} className="w-12 h-12 md:w-[113px] md"/>
+                <Image src="/pricing.svg" alt="pricing" width={90} height={75} className="w-12 h-12 md:w-[100px] md:h-[80px]"/>
                 <div>
                   <h1 className="font-bold text-sm md:text-base">ЦЕНООБРАЗОВАНИЕ</h1>
                   <p className="text-black text-xs md:text-sm"> Лучшие цены на рынке пластиковых окон </p>
@@ -276,10 +275,14 @@ export default function Products() {
           </div>
         </div>
         
-        <div className="text-center py-8">
-          <button className="px-6 py-3 bg-orange-500 text-white rounded-sm hover:bg-orange-600 transition-colors">
-            ryjgrf
-          </button>
+        <div className="text-center items-center flex justify-center py-8">
+        <div className="flex justify-center items-center py-8">
+              <MeasurementModalForm 
+                className="max-w-[300px]"
+                buttonText="Оформить заявку на замер"
+                textClassName="text-sm"
+            />
+        </div>
         </div>
       </div>
     </section>

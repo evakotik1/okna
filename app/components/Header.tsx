@@ -9,6 +9,8 @@ import Calculation from "@/public/calculation.svg"
 import Ruler from "@/public/ruler.svg"
 import ActiveLink from "./ActiveLink"
 import MeasurementModal from './forms/measurementModalForm'
+import MeasurementModalForm from './forms/measurementModalForm'
+import CalculationModalForm from './forms/CalculationModalForm'
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -37,19 +39,12 @@ export default function Header() {
 
                     <div className="hidden md:flex items-center gap-4">
 
-                        <div className="bg-[#EF7F04] rounded-sm">
-                            <div className="flex items-center gap-3 pl-3.5 py-3 pr-4">
-                                <Image src={Ruler} alt="Ruler"/>
-                                <p className="text-white font-bold text-[13px]">Заявка на замер</p>
-                            </div>
-                        </div>
+                    <MeasurementModalForm />
 
-                        <div className="bg-[#3B3A63] rounded-sm">
-                            <div className="flex items-center gap-3 pl-3.5 py-3 pr-4">
-                                <Image src={Calculation} alt="Calculation"/>
-                                <p className="text-white font-bold text-[13px]">Заказать расчет</p>
-                            </div>
-                        </div>
+                    <CalculationModalForm 
+                        className="max-w-[170px]"
+                        buttonText="Заказать расчет"
+                    />
 
                     </div>
 
@@ -73,19 +68,16 @@ export default function Header() {
                                     <ActiveLink href="#contact" onClick={() => setIsMenuOpen(false)}>Контакты</ActiveLink>
                                     
                                     <div className="flex flex-col gap-3 ">
-                                        <div className="bg-[#EF7F04] rounded-sm p-4">
-                                            <div className="flex items-center gap-3">
-                                                <Image src={Ruler} alt="Ruler"/>
-                                                <p className="text-white font-bold text-[13px]">Заявка на замер</p>
-                                            </div>
-                                        </div>
+                                    <MeasurementModalForm 
+                                        className="max-w-[170px]"
+                                        buttonText="Заявка на замер"
+                                        textClassName="text-[13px]"
+                                    />
                                         
-                                        <div className="bg-[#3B3A63] rounded-sm p-4">
-                                            <div className="flex items-center gap-3">
-                                                <Image src={Calculation} alt="Calculation"/>
-                                                <p className="text-white font-bold text-[13px]">Заказать расчет</p>
-                                            </div>
-                                        </div>
+                                        <CalculationModalForm 
+                                            className="max-w-[170px]"
+                                            buttonText="Заказать расчет"
+                                        />
                                     </div>
 
                                 </div>

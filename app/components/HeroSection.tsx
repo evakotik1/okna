@@ -64,7 +64,7 @@ export default function HeroSection() {
                   <MeasurementForm />
                 </div>
                 
-                <div className="absolute top-[35px] md:top-[340px] left-1/2 transform -translate-x-1/2 ml-2 z-10">
+                <div className="absolute top-[360px] md:top-[340px] left-1/2 transform -translate-x-1/2 ml-2 z-10">
                   <div className="w-[370px] h-[160px] md:w-[470px] md:h-[200px]">
                     <Image src="/rulerNEW.svg" alt="bannerRuler" fill className="w-full h-full object-contain" />
                   </div>

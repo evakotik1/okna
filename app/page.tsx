@@ -7,27 +7,15 @@ import FAQ from "./components/faq";
 import Contacts from "./components/Contacts";
 import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
+import Header from "./components/Header";
 
 export default function Home() {
   return (
-    // div>
-    // <div className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"
-    //   // style={{ backgroundImage: "url('/Grid.svg')" }}
-    //   >
-    // </div>
-    //     <main>
-    //       <Header />
-    //       <HeroSection />
-    //       <AboutUs />
-    //       <QuestionSection />
-    //       <Footer />
-    //     </main>
-    //   </div>
-
     <div>
       <div>
         <div>
           <main>
+            <Header />
             <HeroSection />
             <Services />
             <Products />

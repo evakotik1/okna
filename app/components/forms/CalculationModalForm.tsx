@@ -10,38 +10,36 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { api } from "@/app/lib/client/api";
 import Image from "next/image";
-import Ruler from "@/public/ruler.svg"
+import Calculation from "@/public/calculation.svg"
 import { X } from "lucide-react";
 
-const measurementSchema = z.object({
+const calculationSchema = z.object({
     name: z.string().min(2, "Имя слишком короткое"),
     phone: z.string().min(11, "Номер телефона должен содержать минимум 11 цифр"),
-    email: z.email("Введите корректный email"), 
+    email: z.email("Введите корректный email"),
     consent: z.boolean().refine((val) => val === true, {
         message: "Необходимо согласие на обработку данных",
     }),
 });
 
-type FormData = z.infer<typeof measurementSchema>;
+type FormData = z.infer<typeof calculationSchema>;
 
-interface MeasurementModalFormProps {
-    className?: string 
-    buttonText?: string
-    textClassName?: string
+interface CalculationModalFormProps {
+    className?: string;
+    buttonText?: string;
+    textClassName?: string;
 }
 
-export default function MeasurementModalForm({ 
+export default function CalculationModalForm({ 
     className = "",
-    buttonText = "Заявка на замер",
+    buttonText = "Заказать расчет",
     textClassName = ""
-}: MeasurementModalFormProps) {
+}: CalculationModalFormProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const queryClient = useQueryClient();
 
-    
-
     const form = useForm<FormData>({
-        resolver: zodResolver(measurementSchema),
+        resolver: zodResolver(calculationSchema),
         defaultValues: {
             name: "",
             phone: "",
@@ -50,30 +48,31 @@ export default function MeasurementModalForm({
         },
     });
 
-
     const submitMutation = useMutation({
         mutationFn: async (data: FormData) => {
             const requestData = {
                 ...data,
-                status: 'processing' as const,
+                status: 'processing' as const
             };
             
             console.log("Отправляю данные:", requestData);
             
-            const result = await api.measurement.post(requestData)
-            if(result.error){
-                throw Error("error")
-            }
+            const result = await api.calculation.post(requestData)
+            // if(result.error){
+            //     throw Error("error")
+            // }
             return result.data;
         },
+        
         onSuccess: () => {
             form.reset();
-            alert("Форма успешно отправлена!");
+            alert("Заявка на расчет успешно отправлена!");
             setIsModalOpen(false);
-            queryClient.invalidateQueries({ queryKey: ['forms'] });
+            queryClient.invalidateQueries({ queryKey: ['calculations'] });
         },
         onError: (error) => {
-            alert("Что-то пошло не так")
+            console.error("Ошибка отправки:", error)
+            alert(`Ошибка отправки: ${error.message || "Неизвестная ошибка"}`);
         }
     });
 
@@ -97,12 +96,12 @@ export default function MeasurementModalForm({
         <>
             <div 
                 className={`
-                bg-[#EF7F04] rounded-sm cursor-pointer hover:bg-orange-600 transition-colors 
+                bg-[#2F2F51] rounded-sm cursor-pointer hover:bg-[#444479] transition-colors 
                 ${className} `}
                 onClick={() => setIsModalOpen(true)}
             >
                 <div className="flex items-center gap-3 pl-3.5 py-3 pr-4 ">
-                    <Image src={Ruler} alt="Ruler" width={20} height={20} />
+                    <Image src={Calculation} alt="Calculation" width={20} height={20} />
                     <p className={`text-white font-bold ${textClassName || "text-[13px]"}`}>
                     {buttonText}</p>
                 </div>
@@ -110,38 +109,33 @@ export default function MeasurementModalForm({
 
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-orange-500 rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[600px] mx-auto">
-                    <div className="relative pt-7 px-16">
-
-                        {/* <div className="flex items-center justify-center gap-3">
-                            <Image src={Ruler} alt="Ruler" width={30} height={25} />
-                            <h2 className="text-2xl font-bold text-white"> Вызвать замерщика на дом </h2>
-                        </div> */}
-
+                    <div className="bg-[#2F2F51] rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[600px] mx-auto">
+                    <div className="relative pt-7 px-6 md:px-16">
                         <button
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute right-4 top-4  text-white hover:text-gray-200"
+                            className="absolute right-4 top-4 text-white hover:text-gray-200"
                         >
-                            <X className="md:w-10 md:h-10 w-7 h-7"strokeWidth={1.5}/>
+                            <X className="md:w-10 md:h-10 w-7 h-7" strokeWidth={1.5}/>
                         </button>
                     </div>
 
                         <div className="px-9 md:px-14 py-8 flex flex-col justify-center items-center gap-7">
-
-                        <div className="flex items-center justify-center gap-4">
-                            <Image src={Ruler} alt="Ruler" width={30} height={25} />
-                            <h2 className="md:text-2xl text-xl font-bold text-white"> Вызвать замерщика на дом </h2>
-                        </div>
+                            <div className="flex items-center justify-center gap-4">
+                                <Image src={Calculation} alt="Calculation" width={30} height={25} />
+                                <h2 className="md:text-2xl text-xl font-bold text-white text-center">
+                                    Заказать расчет стоимости
+                                </h2>
+                            </div>
 
                             <ShadcnForm {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 w-full">
                                     <FormField control={form.control} name="name" render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
                                                 <Input 
                                                     placeholder="Ваше имя" 
                                                     {...field} 
-                                                    className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268]  placeholder:text-[17px]"
+                                                    className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268] placeholder:text-[17px]"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -159,13 +153,12 @@ export default function MeasurementModalForm({
                                                         field.onChange(formatted);
                                                     }}
                                                     value={field.value}
-                                                    className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268]  placeholder:text-[17px]" 
+                                                    className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268] placeholder:text-[17px]" 
                                                 />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}/>
-
 
                                     <FormField control={form.control} name="email" render={({ field }) => (
                                         <FormItem>
@@ -174,7 +167,7 @@ export default function MeasurementModalForm({
                                                     type="email"
                                                     placeholder="E-mail" 
                                                     {...field} 
-                                                    className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268]  placeholder:text-[17px]"
+                                                    className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268] placeholder:text-[17px]"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -183,7 +176,7 @@ export default function MeasurementModalForm({
 
                                     <FormField control={form.control} name="consent" render={({ field }) => (
                                         <FormItem className="flex flex-col gap-2">
-                                            <div className="flex flex-row items-center gap-3">
+                                            <div className="flex flex-row items-start gap-3">
                                                 <FormControl>
                                                     <Checkbox
                                                         checked={field.value}
@@ -198,7 +191,7 @@ export default function MeasurementModalForm({
                                                 <div className="space-y-1 leading-none">
                                                     <FormLabel className="text-sm font-normal text-white"> 
                                                         Я согласен(на) на обработку{' '}
-                                                        <a href="/" className="text-[#2F2F51]" target="_blank">
+                                                        <a href="/" className="text-orange-500" target="_blank">
                                                             персональных данных
                                                         </a>
                                                     </FormLabel>
@@ -208,14 +201,13 @@ export default function MeasurementModalForm({
                                         </FormItem>
                                     )}/>
 
-
                                     <div className="flex justify-center mt-4">
                                         <Button 
                                             type="submit" 
-                                            className="bg-white hover:bg-gray-200 py-3.5 px-12   text-orange-500 font-bold text-base transition-colors"
+                                            className="bg-white hover:bg-gray-200 py-3.5 px-12 text-[#2F2F51] font-bold text-base transition-colors w-full md:w-auto"
                                             disabled={submitMutation.isPending}
                                         >
-                                            {submitMutation.isPending ? "Отправка..." : "Отправить заявку"}
+                                            {submitMutation.isPending ? "Отправка..." : "Заказать расчет"}
                                         </Button>
                                     </div>
                                 </form>
