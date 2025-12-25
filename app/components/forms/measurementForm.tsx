@@ -14,9 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-
+import { api } from "@/app/lib/client/api";
 import { Checkbox } from "@/components/ui/checkbox";
-import { api } from "@/app/server/api";
 
 const measurementSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
