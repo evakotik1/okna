@@ -3,11 +3,12 @@ import { Roboto } from 'next/font/google';
 import "./globals.css";
 import Header from './components/Header';
 import { Providers } from "./providers";
+import { Toaster } from "sonner";
 
 
 const roboto = Roboto({
   variable: "--font-roboto",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic"], 
   weight: ['100', '300', '400', '500', '700', '900'],
   style: ['normal', 'italic'],
 });
@@ -32,6 +33,12 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-[#E5E5E5] text-primary-text">
         <Providers>
           {children}
+          <Toaster 
+          position="top-right"
+          richColors
+          closeButton
+          duration={3000}
+        />
         </Providers>
       </body>
     </html>

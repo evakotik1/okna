@@ -58,9 +58,6 @@ export default function HeroSection() {
               <div className="relative w-full max-w-[428px] md:mb-0 mb-16">
                 
                 <div className="bg-white w-full h-[450px] md:h-[456px] flex items-center justify-center rounded-xl">
-                  {/* <div className="text-center p-4 md:p-8">
-                    <p className="text-sm md:text-base">Форма</p>
-                  </div> */}
                   <MeasurementForm />
                 </div>
                 

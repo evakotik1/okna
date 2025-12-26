@@ -21,7 +21,7 @@ export default function Header() {
                 <div className="flex items-center h-24 gap-14 justify-center relative">
                     
                     <button className="md:hidden absolute right-4"  onClick={() => setIsMenuOpen(true)} >
-                        <Menu className="w-6 h-6 text-black" />
+                        <Menu className="w-8 h-8 rounded-sm text-black bg-orange-500 hover:bg-orange-600 p-1" />
                     </button>
 
                     <Link href="/" className='md:static absolute left-4 md:left-auto top-4 md:top-auto'>
@@ -53,7 +53,13 @@ export default function Header() {
 
                             <div className="flex justify-end mb-8">
                                 <button onClick={() => setIsMenuOpen(false)}>
-                                    <X className="w-6 h-6" />
+                                <Image
+                        src="/X.svg"
+                        alt="Закрыть"
+                        width={7}
+                        height={7}
+                        className="w-5 h-5 md:w-5 md:h-5"
+                    />
                                 </button>
                             </div>
 

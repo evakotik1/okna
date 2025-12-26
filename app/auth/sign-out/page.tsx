@@ -2,16 +2,17 @@
 
 import { authClient } from "@/app/lib/client/auth-client";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function SignOut() {
     useEffect(() => {
         const logout = async () => {
             try {
                 await authClient.signOut();
-                alert("Вы вышли из аккаунта!");
+                toast("Вы вышли из аккаунта!");
                 window.location.href = "/";
             } catch {
-                alert("Ошибка выхода!");
+                toast("Ошибка выхода!");
                 window.location.href = "/";
             }
         };

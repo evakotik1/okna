@@ -11,9 +11,9 @@ export default async function AdminLayout({
 		headers: await headers(),
 	});
 
-	// if (session?.user.role !== "admin") {
-	// 	redirect("/");
-	// }
+	if (session?.user.role !== "admin") {
+		redirect("/");
+	}
 
 	return <div className="flex flex-col gap-4 p-4">{children}</div>;
 }

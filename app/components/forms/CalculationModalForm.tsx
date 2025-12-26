@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -19,6 +19,7 @@ import { api } from "@/app/lib/client/api";
 import Image from "next/image";
 import Calculation from "@/public/calculation.svg";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 
 const calculationSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
@@ -30,6 +31,17 @@ const calculationSchema = z.object({
 });
 
 type FormData = z.infer<typeof calculationSchema>;
+
+interface ApiErrorResponse {
+	response?: {
+		status: number;
+		data?: {
+			errors?: Record<string, string[]>;
+			message?: string;
+		};
+	};
+	message: string;
+}
 
 interface CalculationModalFormProps {
 	className?: string;
@@ -57,33 +69,67 @@ export default function CalculationModalForm({
 
 	const submitMutation = useMutation({
 		mutationFn: async (data: FormData) => {
+
+			const cleanedPhone = data.phone.replace(/\D/g, "");
+			
 			const requestData = {
-				...data,
-				status: "processing" as const,
+				name: data.name.trim(),
+				phone: cleanedPhone,
+				email: data.email.trim(),
+				consent: data.consent,
 			};
 
-			console.log("Отправляю данные:", requestData);
+			console.log("Отправляю данные расчета:", requestData);
 
-			const result = await api.calculation.post(requestData);
-			// if(result.error){
-			//     throw Error("error")
-			// }
-			return result.data;
+			try {
+				const result = await api.calculation.post(requestData);
+				return result.data;
+			} catch (error) {
+				const apiError = error as ApiErrorResponse;
+				console.error("Ошибка сервера:", {
+					status: apiError.response?.status,
+					data: apiError.response?.data,
+					message: apiError.message,
+					consent: data.consent
+				});
+				throw error;
+			}
 		},
-
 		onSuccess: () => {
 			form.reset();
-			alert("Заявка на расчет успешно отправлена!");
+			toast("Заявка на расчет успешно отправлена!");
 			setIsModalOpen(false);
 			queryClient.invalidateQueries({ queryKey: ["calculations"] });
 		},
-		onError: (error) => {
+		onError: (error: unknown) => {
 			console.error("Ошибка отправки:", error);
-			alert(`Ошибка отправки: ${error.message || "Неизвестная ошибка"}`);
+		
+			const isApiError = (err: unknown): err is ApiErrorResponse => {
+				return typeof err === 'object' && err !== null && 'response' in err;
+			};
+			
+			if (isApiError(error)) {
+				if (error.response?.status === 422) {
+					const serverErrors = error.response.data?.errors;
+					if (serverErrors) {
+						const errorMessages = Object.entries(serverErrors)
+							.map(([field, messages]) => `${field}: ${messages}`)
+							.join('\n');
+						toast(`Ошибки валидации:\n${errorMessages}`);
+					} else {
+						toast("Ошибка валидации данных. Проверьте все поля.");
+					}
+				} else {
+					toast(`Ошибка отправки: ${error.message || "Неизвестная ошибка"}`);
+				}
+			} else {
+				toast("Неизвестная ошибка");
+			}
 		},
 	});
 
 	const onSubmit = (data: FormData) => {
+		console.log("Данные формы расчета:", data);
 		submitMutation.mutate(data);
 	};
 
@@ -121,8 +167,8 @@ export default function CalculationModalForm({
 
 			{isModalOpen && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-					<div className="bg-[#2F2F51] rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[600px] mx-auto">
-						<div className="relative pt-7 px-6 md:px-16">
+					<div className="bg-[#2F2F51] rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[550px] mx-auto">
+						<div className="relative pt-7 px-6 md:px-20">
 							<button
 								onClick={() => setIsModalOpen(false)}
 								className="absolute right-4 top-4 text-white hover:text-gray-200"
@@ -131,7 +177,7 @@ export default function CalculationModalForm({
 							</button>
 						</div>
 
-						<div className="px-9 md:px-14 py-8 flex flex-col justify-center items-center gap-7">
+						<div className="px-9 md:px-20 py-8 flex flex-col justify-center items-center gap-7">
 							<div className="flex items-center justify-center gap-4">
 								<Image
 									src={Calculation}
@@ -140,7 +186,7 @@ export default function CalculationModalForm({
 									height={25}
 								/>
 								<h2 className="md:text-2xl text-xl font-bold text-white text-center">
-									Заказать расчет стоимости
+									Заказать расчет
 								</h2>
 							</div>
 
@@ -179,7 +225,7 @@ export default function CalculationModalForm({
 															const formatted = formatPhone(e.target.value);
 															field.onChange(formatted);
 														}}
-														value={field.value}
+														value={field.value || ""}
 														className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268] placeholder:text-[17px]"
 													/>
 												</FormControl>
@@ -213,15 +259,14 @@ export default function CalculationModalForm({
 											<FormItem className="flex flex-col gap-2">
 												<div className="flex flex-row items-start gap-3">
 													<FormControl>
-														<Checkbox
-															checked={field.value}
-															onCheckedChange={(checked) => {
-																field.onChange(checked);
-															}}
-															className="bg-white 
-                                                        data-[state=checked]:bg-white 
-                                                        data-[state=checked]:text-black"
-														/>
+													<Checkbox
+														id="toggle-2"
+														checked={field.value}
+														onCheckedChange={(checked) => 
+															field.onChange(checked === true)
+														}
+														className="data-[state=checked]:border-blue-60 w-h h-4 aspect-square data-[state=checked]:bg-orange-500 data-[state=checked]:text-orange-500 dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+													/>
 													</FormControl>
 													<div className="space-y-1 leading-none">
 														<FormLabel className="text-sm font-normal text-white">
@@ -244,7 +289,7 @@ export default function CalculationModalForm({
 									<div className="flex justify-center mt-4">
 										<Button
 											type="submit"
-											className="bg-white hover:bg-gray-200 py-3.5 px-12 text-[#2F2F51] font-bold text-base transition-colors w-full md:w-auto"
+											className="bg-white hover:bg-gray-200 py-6 px-12 text-[#2F2F51] font-bold text-base transition-colors w-full md:w-auto"
 											disabled={submitMutation.isPending}
 										>
 											{submitMutation.isPending

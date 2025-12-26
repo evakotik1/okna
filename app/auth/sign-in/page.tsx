@@ -3,6 +3,7 @@
 import { authClient } from "@/app/lib/client/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 export default function SignIn() {
@@ -26,11 +27,11 @@ export default function SignIn() {
     const onFormSubmit = async (data: z.infer<typeof formSchema>) => {
     await authClient.signIn.email(data, {
         onSuccess: () => {
-            alert("Успешно!");
+            toast("Успешно!");
             window.location.href = "/";
         },
         onError: () => {
-            alert("Ошибка!");
+            toast("Ошибка!");
         },
     });
 };

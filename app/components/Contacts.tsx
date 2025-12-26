@@ -5,7 +5,7 @@ import QuestionsForm from "./forms/questionsForm"
 
 export default function Contacts() {
   return (
-    <section className="md:pt-16">
+    <section className="md:pt-16 " id="contact">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         <h2 className="text-2xl font-bold text-center mb-8 md:mb-12">Контакты</h2>
         

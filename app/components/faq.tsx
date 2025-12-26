@@ -44,7 +44,7 @@ export default function FAQ() {
   }
 
   return (
-    <section className="py-16">
+    <section className="py-16" id="faq">
       <div className="max-w-[1200px] mx-auto px-6 md:px-24 py-8 md:py-14 bg-orange-500">
         
         <div className="flex flex-col gap-8 md:gap-10">

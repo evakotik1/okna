@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { unknown, z } from "zod/v4";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -12,10 +12,10 @@ import {
 	FormMessage,
 } from "@/app/components/ui/form";
 import { Input } from "@/app/components/ui/input";
-
 import { Button } from "@/app/components/ui/button";
 import { api } from "@/app/lib/client/api";
 import { Checkbox } from "@/app/components/ui/checkbox";
+import { toast } from "sonner";
 
 const measurementSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
@@ -33,35 +33,46 @@ export default function MeasurementForm() {
 
 	const form = useForm<FormData>({
 		resolver: zodResolver(measurementSchema),
-		defaultValues: {},
+		defaultValues: {
+			name: "",
+			phone: "",
+			email: "",
+			consent: false,
+		},
 	});
 
 	const submitMutation = useMutation({
 		mutationFn: async (data: FormData) => {
 			const requestData = {
 				...data,
-				status: "processing" as const,
+				status: "PROCESSING" as const,
 			};
 
 			console.log("Отправляю данные:", requestData);
 
-			const result = await api.measurement.post(requestData);
-			if (result.error) {
-				throw Error("error");
+			try {
+				const result = await api.measurement.post(requestData);
+				console.log("Результат:", result);
+				return result.data;
+			} catch (error) {
+				console.error("Ошибка при отправке:", error);
+				throw error;
 			}
-			return result.data;
 		},
 		onSuccess: () => {
 			form.reset();
-			alert("Форма успешно отправлена!");
-			queryClient.invalidateQueries({ queryKey: ["forms"] });
+			toast("Форма успешно отправлена!");
+			
+			queryClient.invalidateQueries({ queryKey: ["measurements"] });
 		},
 		onError: (error) => {
-			alert("Что-то пошло не так");
+			console.error("Ошибка формы:", error);
+			toast("Что-то пошло не так. Проверьте данные и попробуйте снова.");
 		},
 	});
 
 	const onSubmit = (data: FormData) => {
+		console.log("Данные формы:", data);
 		submitMutation.mutate(data);
 	};
 
@@ -118,7 +129,7 @@ export default function MeasurementForm() {
 											const formatted = formatPhone(e.target.value);
 											field.onChange(formatted);
 										}}
-										value={field.value}
+										value={field.value || ""}
 										className="h-11 pl-4 bg-[#E2E2E2] placeholder:text-[#424268] placeholder:text-[16.5px]"
 									/>
 								</FormControl>
@@ -154,10 +165,11 @@ export default function MeasurementForm() {
 									<FormControl>
 										<Checkbox
 											id="toggle-2"
-											checked={field.value ?? false}
-											onCheckedChange={(checked) => field.onChange(checked)}
-											defaultChecked
-											className="data-[state=checked]:border-blue-60 w-h h-4 aspect-square data-[state=checked]:bg-black data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+											checked={field.value}
+											onCheckedChange={(checked) => 
+												field.onChange(checked === true)
+											}
+											className="data-[state=checked]:border-blue-60 w-h h-4 aspect-square data-[state=checked]:bg-orange-500 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
 										/>
 									</FormControl>
 									<div className="space-y-1 leading-none">

@@ -43,7 +43,7 @@ export const calculation = pgTable("calculation", {
     phone: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
     consent: boolean().default(false).notNull(),
-    status: varchar('status', { length: 50 }).default('new'),
+    status: statusEnum("status").default("PROCESSING"),
 });
 
 

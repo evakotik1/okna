@@ -1,9 +1,8 @@
-// app/admin/page.tsx
 "use client";
 
 import Link from "next/link";
 
-export default function AdminDashboard() {
+export default function Admin() {
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-8">Админ-панель</h1>

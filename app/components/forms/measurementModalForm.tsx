@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -19,6 +19,7 @@ import { api } from "@/app/lib/client/api";
 import Image from "next/image";
 import Ruler from "@/public/ruler.svg";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 
 const measurementSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
@@ -57,31 +58,60 @@ export default function MeasurementModalForm({
 
 	const submitMutation = useMutation({
 		mutationFn: async (data: FormData) => {
+
+			const cleanedPhone = data.phone.replace(/\D/g, "");
+			
 			const requestData = {
-				...data,
-				status: "processing" as const,
+				name: data.name.trim(),
+				phone: cleanedPhone,
+				email: data.email.trim(),
+				consent: data.consent,
+
 			};
 
-			console.log("Отправляю данные:", requestData);
+			console.log("Отправка данных", requestData);
 
-			const result = await api.measurement.post(requestData);
-			if (result.error) {
-				throw Error("error");
+			try {
+				const result = await api.measurement.post(requestData);
+				console.log("Ответ сервера:", result);
+				return result.data;
+			} catch (error: any) {
+				console.error("Ошибка сервера:", {
+					status: error.response?.status,
+					data: error.response?.data,
+					message: error.message
+				});
+				throw error;
 			}
-			return result.data;
 		},
 		onSuccess: () => {
 			form.reset();
-			alert("Форма успешно отправлена!");
+			toast(" Форма успешно отправлена!");
 			setIsModalOpen(false);
-			queryClient.invalidateQueries({ queryKey: ["forms"] });
+			queryClient.invalidateQueries({ queryKey: ["measurements"] });
 		},
-		onError: (error) => {
-			alert("Что-то пошло не так");
+		onError: (error: any) => {
+			console.error("Ошибка:", error);
+			
+			if (error.response?.status === 422) {
+
+				const serverErrors = error.response.data;
+				if (serverErrors?.errors) {
+					const errorMessages = Object.entries(serverErrors.errors)
+						.map(([field, messages]) => `${field}: ${messages}`)
+						.join('\n');
+					toast(`Ошибки валидации:\n${errorMessages}`);
+				} else {
+					toast("Ошибка валидации данных. Проверьте данные и попробуйте снова.");
+				}
+			} else {
+				toast("Что-то пошло не так");
+			}
 		},
 	});
 
 	const onSubmit = (data: FormData) => {
+		console.log("Данные с формы:", data);
 		submitMutation.mutate(data);
 	};
 
@@ -121,11 +151,6 @@ export default function MeasurementModalForm({
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
 					<div className="bg-orange-500 rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[600px] mx-auto">
 						<div className="relative pt-7 px-16">
-							{/* <div className="flex items-center justify-center gap-3">
-                            <Image src={Ruler} alt="Ruler" width={30} height={25} />
-                            <h2 className="text-2xl font-bold text-white"> Вызвать замерщика на дом </h2>
-                        </div> */}
-
 							<button
 								onClick={() => setIsModalOpen(false)}
 								className="absolute right-4 top-4  text-white hover:text-gray-200"
@@ -138,8 +163,7 @@ export default function MeasurementModalForm({
 							<div className="flex items-center justify-center gap-4">
 								<Image src={Ruler} alt="Ruler" width={30} height={25} />
 								<h2 className="md:text-2xl text-xl font-bold text-white">
-									{" "}
-									Вызвать замерщика на дом{" "}
+									Вызвать замерщика на дом
 								</h2>
 							</div>
 
@@ -172,13 +196,13 @@ export default function MeasurementModalForm({
 											<FormItem>
 												<FormControl>
 													<Input
-														placeholder="Номер телефона"
+														placeholder="Номер телефона (только цифры)"
 														{...field}
 														onChange={(e) => {
 															const formatted = formatPhone(e.target.value);
 															field.onChange(formatted);
 														}}
-														value={field.value}
+														value={field.value || ""}
 														className="h-12 pl-4 bg-gray-100 placeholder:text-[#424268]  placeholder:text-[17px]"
 													/>
 												</FormControl>
@@ -212,15 +236,14 @@ export default function MeasurementModalForm({
 											<FormItem className="flex flex-col gap-2">
 												<div className="flex flex-row items-center gap-3">
 													<FormControl>
-														<Checkbox
-															checked={field.value}
-															onCheckedChange={(checked) => {
-																field.onChange(checked);
-															}}
-															className="bg-white 
-                                                        data-[state=checked]:bg-white 
-                                                        data-[state=checked]:text-black"
-														/>
+													<Checkbox
+														id="toggle-2"
+														checked={field.value}
+														onCheckedChange={(checked) => 
+															field.onChange(checked === true)
+														}
+														className="data-[state=checked]:border-blue-60 w-h h-4 aspect-square data-[state=checked]:bg-[#3B3A63] data-[state=checked]:text-orange-500 dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+													/>
 													</FormControl>
 													<div className="space-y-1 leading-none">
 														<FormLabel className="text-sm font-normal text-white">
@@ -243,7 +266,7 @@ export default function MeasurementModalForm({
 									<div className="flex justify-center mt-4">
 										<Button
 											type="submit"
-											className="bg-white hover:bg-gray-200 py-3.5 px-12   text-orange-500 font-bold text-base transition-colors"
+											className="bg-white hover:bg-gray-200 py-6 px-12   text-orange-500 font-bold text-base transition-colors"
 											disabled={submitMutation.isPending}
 										>
 											{submitMutation.isPending

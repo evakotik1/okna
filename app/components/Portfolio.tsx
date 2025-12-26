@@ -6,7 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { X } from "lucide-react";
 import MeasurementModalForm from "./forms/measurementModalForm";
-import { QuestionsModalForm } from "./forms/QuestionsModalForm";
+import QuestionsModalForm from "./forms/QuestionsModalForm";
 
 const portfolioImages = [
 	{
@@ -279,7 +279,13 @@ export default function Portfolio() {
 							onClick={() => setIsModalOpen(false)}
 							className="absolute top-3 right-2 md:top-8 md:right-8text-black hover:text-orange-500 transition-colors z-50"
 						>
-							<X className="md:w-7 md:h-7 w-6 h-6" />
+							<Image
+								src="/X.svg"
+								alt="Закрыть"
+								width={7}
+								height={7}
+								className="w-4 h-4 md:w-5 md:h-5"
+							/>
 						</button>
 
 						<div className="md:flex md:flex-col">

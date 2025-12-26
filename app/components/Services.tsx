@@ -184,8 +184,14 @@ return (
                         <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, white 0%, white 48%, transparent 65%)' }} />
                     </div>
                     
-                    <button onClick={() => setIsModalOpen(false)} className="absolute top-2 md:top-8 right-2 md:right-8 text-black hover:text-orange-500 z-50">
-                        <X className="w-7 h-7" />
+                    <button onClick={() => setIsModalOpen(false)} className="absolute top-4 md:top-8 right-4 md:right-8 text-black hover:text-orange-500 z-50">
+                    <Image
+                        src="/X.svg"
+                        alt="Закрыть"
+                        width={7}
+                        height={7}
+                        className="w-4 h-4 md:w- md:h-"
+                    />
                     </button>
                     
                     <div className="flex flex-col gap-12 relative z-10">

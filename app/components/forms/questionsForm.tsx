@@ -16,6 +16,7 @@ import { Textarea } from "@/app/components/ui/textarea";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { Button } from "@/app/components/ui/button";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type questionsFormData = {
 	name: string;
@@ -47,7 +48,7 @@ const api = {
 
 const questionsFormSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
-	email: z.string().email("Введите корректный email"),
+	email: z.email("Введите корректный email"),
 	message: z.string().min(10, "Сообщение должно содержать минимум 10 символов"),
 	consent: z.boolean().refine((val) => val === true, {
 		message: "Необходимо согласие на обработку данных",
@@ -86,11 +87,11 @@ export default function QuestionsForm() {
 
 			form.reset();
 			setIsSuccess(true);
-			alert("Сообщение отправлено!");
+			toast("Сообщение отправлено!");
 
 			setTimeout(() => setIsSuccess(false), 3000);
 		} catch (error) {
-			alert("Ошибка отправки");
+			toast("Ошибка отправки");
 		} finally {
 			setIsLoading(false);
 		}
@@ -165,14 +166,13 @@ export default function QuestionsForm() {
 								<div className="flex flex-row items-center gap-3">
 									<FormControl>
 										<Checkbox
+											id="toggle-2"
 											checked={field.value}
-											onCheckedChange={(checked) => {
-												field.onChange(checked === true);
-											}}
-											className="bg-[#E2E2E2] 
-										data-[state=checked]:bg-white 
-										data-[state=checked]:text-black"
-										/>
+											onCheckedChange={(checked) => 
+												field.onChange(checked === true)
+											}
+											className="data-[state=checked]:border-blue-60 w-h h-4 aspect-square data-[state=checked]:bg-orange-500 data-[state=checked]:text-orange-500 dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+											/>
 									</FormControl>
 									<div className="space-y-1 leading-none">
 										<FormLabel className="text-sm font-normal">

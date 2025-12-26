@@ -19,6 +19,7 @@ import { Button } from "@/app/components/ui/button";
 import { api } from "@/app/lib/client/api";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 
 const reviewSchema = z.object({
 	name: z.string().min(2, "Имя слишком короткое"),
@@ -62,12 +63,12 @@ export default function ReviewModalForm() {
 		},
 		onSuccess: () => {
 			form.reset();
-			alert("Ваш отзыв успешно отправлен!");
+			toast("Ваш отзыв успешно отправлен!");
 			setIsModalOpen(false);
 			queryClient.invalidateQueries({ queryKey: ["reviews"] });
 		},
 		onError: (error) => {
-			alert("Что-то пошло не так");
+			toast("Что-то пошло не так");
 		},
 	});
 
@@ -87,13 +88,19 @@ export default function ReviewModalForm() {
 
 			{isModalOpen && (
 				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-					<div className="bg-white rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[520px] mx-auto">
+					<div className="bg-white rounded-xl shadow-xl w-full max-w-[90%] md:max-w-[550px] mx-auto">
 						<div className="relative pt-7 px-6 md:px-16">
 							<button
 								onClick={() => setIsModalOpen(false)}
-								className="absolute right-4 top-4  hover:text-gray-700"
+								className="absolute right-5 top-5  hover:text-gray-700"
 							>
-								<X className="md:w-10 md:h-10 w-7 h-7" strokeWidth={1.5} />
+								<Image
+									src="/X.svg"
+									alt="Закрыть"
+									width={7}
+									height={7}
+									className="w-5 h-5 md:w-6 md:h-6"
+								/>
 							</button>
 						</div>
 
@@ -195,14 +202,13 @@ export default function ReviewModalForm() {
 												<div className="flex flex-row items-center gap-3">
 													<FormControl>
 														<Checkbox
-															checked={field.value}
-															onCheckedChange={(checked) => {
-																field.onChange(checked);
-															}}
-															className="bg-[#E2E2E2] 
-                                                        data-[state=checked]:bg-white 
-                                                        data-[state=checked]:text-black"
-														/>
+														id="toggle-2"
+														checked={field.value}
+														onCheckedChange={(checked) => 
+															field.onChange(checked === true)
+														}
+														className="data-[state=checked]:border-blue-60 w-h h-4 aspect-square data-[state=checked]:bg-orange-500 data-[state=checked]:text-orange-500 dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+													/>
 													</FormControl>
 													<div className="space-y-1 leading-none">
 														<FormLabel className="text-sm font-normal">
@@ -225,7 +231,7 @@ export default function ReviewModalForm() {
 									<div className="flex justify-center mt-4">
 										<Button
 											type="submit"
-											className="bg-orange-500 hover:bg-gray-200 py-3.5 px-12 text-white font-bold text-base transition-colors w-full md:w-auto"
+											className="bg-orange-500 hover:bg-orange-600 py-6 px-12 text-white font-bold text-base transition-colors w-full md:w-auto"
 											disabled={submitMutation.isPending}
 										>
 											{submitMutation.isPending

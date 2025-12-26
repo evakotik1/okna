@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery, useMutation } from "@tanstack/react-query";
-
 import {
 	Table,
 	TableBody,
@@ -23,6 +22,8 @@ import { format } from "date-fns";
 import { ColumnDef } from "@tanstack/react-table";
 import CreateUpdateMeasurement from "./create-update";
 import { DataTable } from "@/app/components/ui/data-table";
+import { Button } from "@/app/components/ui/button";
+import { useState, useMemo } from "react";
 
 export function MeasurementsTable({
 	initialMeasurements: initialData,
@@ -43,112 +44,113 @@ export function MeasurementsTable({
 			status,
 		}: {
 			id: string;
-			status: "processing" | "completed";
+			status: "PROCESSING" | "COMPLETED";
 		}) => {
 			const res = await api.measurement.status({ id }).put({ status });
 			return res.data;
 		},
 	});
 
-	return (
-		// <div className="p-4 lg:p-6 text-black">
-		// 	<h1 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6">
-		// 		Заявки на замер ({measurements?.length ?? 0})
-		// 	</h1>
+	const columns: ColumnDef<Measurement>[] = useMemo(() => [
+		{
+			accessorKey: "name",
+			header: "Имя",
+			cell: ({ row }) => <p>{row.original.name}</p>,
+		},
+		{
+			accessorKey: "email",
+			header: "Email",
+			cell: ({ row }) => (
+				<p>
+					{row.original.email}
+				</p>
+			),
+		},
+		{
+			accessorKey: "phone",
+			header: "Телефон",
+			cell: ({ row }) => (
+				<a 
+					href={`tel:${row.original.phone}`}
+					className="text-blue-600 hover:underline"
+				>
+					{row.original.phone}
+				</a>
+			),
+		},
+		{
+			accessorKey: "consent",
+			header: "Согласие",
+			cell: ({ row }) => (
+				<p className={row.original.consent ? "text-green-600" : "text-red-600"}>
+					{row.original.consent ? "Да" : "Нет"}
+				</p>
+			),
+		},
+		{
+			accessorKey: "status",
+			header: "Статус",
+			cell: ({ row }) => {
+				const statusValue = row.original.status?.toLowerCase() || "";
+				
+				const handleStatusChange = (value: string) => {
+					if (value === "processing" || value === "completed") {
+						updateStatus.mutate({
+							id: row.original.id,
+							status: value.toUpperCase() as "PROCESSING" | "COMPLETED",
+						});
+					}
+				};
+				
+				const isProcessing = row.original.status !== "COMPLETED";
+				
+				return (
+					<Select
+						value={statusValue}
+						onValueChange={handleStatusChange}
+						disabled={updateStatus.isPending}
+					>
+						<SelectTrigger className={`w-32 ${updateStatus.isPending ? "opacity-50" : ""}`}>
+							<SelectValue>
+								{updateStatus.isPending ? "..." : isProcessing ? "В процессе" : "Завершено"}
+							</SelectValue>
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="processing">В процессе</SelectItem>
+							<SelectItem value="completed">Завершено</SelectItem>
+						</SelectContent>
+					</Select>
+				);
+			},
+		},
+		{
+			accessorKey: "createdAt",
+			header: "Дата создания",
+			cell: ({ row }) => (
+				<p>{format(row.original.createdAt, "dd.MM.yyyy HH:mm")}</p>
+			),
+		},
+		{
+			id: "actions",
+			header: () => (
+				<div className="w-full justify-end flex items-end">
+					<CreateUpdateMeasurement />
+				</div>
+			),
+			cell: ({ row }) => (
+				<div className="flex flex-row items-center justify-center space-x-2">
+					<CreateUpdateMeasurement measurement={row.original} />
+				</div>
+			),
+		},
+	], [updateStatus]);
 
-		// 	<div className="rounded-md border">
-		// 		<Table>
-		// 			<TableHeader>
-		// 				<TableRow>
-		// 					<TableHead className="text-black">Имя</TableHead>
-		// 					<TableHead className="text-black">Email</TableHead>
-		// 					<TableHead className="text-black">Телефон</TableHead>
-		// 					<TableHead className="text-black">Согласие</TableHead>
-		// 					<TableHead className="text-black">Статус</TableHead>
-		// 				</TableRow>
-		// 			</TableHeader>
-		// 			<TableBody>
-		// 				{measurements.map((measurement) => (
-		// 					<TableRow key={measurement.id}>
-		// 						<TableCell className="font-medium">
-		// 							<div>{measurement.name}</div>
-		// 							<div className="text-sm text-muted-foreground lg:hidden">
-		// 								{measurement.email}
-		// 							</div>
-		// 						</TableCell>
-		// 						<TableCell className="hidden lg:table-cell">
-		// 							<a
-		// 								href={`mailto:${measurement.email}`}
-		// 								className="text-blue-600 hover:underline"
-		// 							>
-		// 								{measurement.email}
-		// 							</a>
-		// 						</TableCell>
-		// 						<TableCell>
-		// 							<a
-		// 								href={`tel:${measurement.phone}`}
-		// 								className="text-blue-600 hover:underline"
-		// 							>
-		// 								{measurement.phone}
-		// 							</a>
-		// 						</TableCell>
-		// 						<TableCell>
-		// 							{measurement.consent ? "✅ Да" : "❌ Нет"}
-		// 						</TableCell>
-		// 						<TableCell>
-		// 							<Select
-		// 								value={measurement.status}
-		// 								onValueChange={(value) =>
-		// 									updateStatus.mutate({
-		// 										id: measurement.id,
-		// 										status: value,
-		// 									})
-		// 								}
-		// 							>
-		// 								<SelectTrigger className="w-32">
-		// 									<SelectValue />
-		// 								</SelectTrigger>
-		// 								<SelectContent>
-		// 									<SelectItem value="processing">В обработке</SelectItem>
-		// 									<SelectItem value="completed">Завершено</SelectItem>
-		// 								</SelectContent>
-		// 							</Select>
-		// 						</TableCell>
-		// 					</TableRow>
-		// 				))}
-		// 			</TableBody>
-		// 		</Table>
-		// 	</div>
-		// </div>
-		<DataTable columns={columns} data={initialData} />
+	return (
+		<div className="p-4 lg:p-6">
+			<h1 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6">
+				Заявки на замер ({measurements?.length ?? 0})
+			</h1>
+			<DataTable columns={columns} data={measurements || initialData} />
+		</div>
 	);
 }
-
-export const columns: ColumnDef<Measurement>[] = [
-	{
-		accessorKey: "name",
-		header: "Имя",
-		cell: ({ row }) => <p>{row.original.name}</p>,
-	},
-	{
-		accessorKey: "createdAt",
-		header: "Дата создания",
-		cell: ({ row }) => (
-			<p>{format(row.original.createdAt, "dd.MM.yyyy HH:mm")}</p>
-		),
-	},
-	{
-		id: "actions",
-		header: () => (
-			<div className="w-full justify-end flex items-end">
-				<CreateUpdateMeasurement />
-			</div>
-		),
-		cell: ({ row }) => (
-			<div className="flex flex-row items-center justify-center space-x-2">
-				<CreateUpdateMeasurement measurement={row.original} />
-				{/* <DeletePartner id={row.original.id} /> */}
-			</div>
-		),
-	},
-];

@@ -13,6 +13,12 @@ export const calculationRouter = new Elysia({
 })
 .use(userServise)
 
+.get("/", async () => {
+  return await db.query.calculation.findMany({
+    orderBy: (calculation, { desc }) => [desc(calculation.createdAt)]
+  })
+})
+
 
 .post("/", async ({body}) => {
   const result = await db.insert(calculation).values(body).returning();
