@@ -47,6 +47,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",
     "elysia": "^1.4.16",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.460.0",
     "mime-types": "^2.1.35",
     "next": "15.3.8",
