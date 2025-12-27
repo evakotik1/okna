@@ -76,10 +76,9 @@ export default function QuestionsForm() {
 		try {
 			const requestData = {
 				...data,
-				status: "new" as const,
 			};
 
-			const result = await api.forms.questions(requestData);
+			await api.forms.questions(requestData);
 
 			// if (result.error) {
 			// 	throw new Error("Ошибка при отправке");

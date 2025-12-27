@@ -28,8 +28,11 @@ export const measurementRouter = new Elysia({
 }, {
   body: measurementSchema
 })
+
+
+
 .get("/admin", async () => {
-  return await ServeCached(["admin", "measurements"], DEFAULT_TTL, async () => 
+  return await ServeCached(["admin", "measurements"], DEFAULT_TTL, async () =>
       await db.query.measurement.findMany()
   )
 }, {
@@ -40,7 +43,7 @@ export const measurementRouter = new Elysia({
   // await InvalidateCached(["admin", "measurements"])
 }, {
   params: z.object({
-    id: z.string() 
+    id: z.string()
   }),
   body: measurementSchema,
   // whichRole: "admin"
@@ -50,7 +53,7 @@ export const measurementRouter = new Elysia({
     status: body.status
   }).where(eq(measurement.id, params.id))
 }, {
-  whichRole: "admin",
+  // whichRole: "admin",
   body: z.object({
     status: z.enum(["PROCESSING", "COMPLETED"])
   })
@@ -61,8 +64,8 @@ export const measurementRouter = new Elysia({
   await InvalidateCached(["admin", "measurements"])
   return { success: true }
 }, {
-  params: z.object({ 
-    id: z.string() 
+  params: z.object({
+    id: z.string()
   }),
-  whichRole: "admin"
+  // whichRole: "admin"
 })

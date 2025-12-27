@@ -1,4 +1,4 @@
 import { api } from "@/app/server/api";
 import { InferTreatyReturnType } from "./utils";
 
-export type Calculation = InferTreatyReturnType<typeof api.calculation.get>[number]
+export type Question = InferTreatyReturnType<typeof api.questions.get>[number]

@@ -26,8 +26,9 @@ export async function UploadFile({
 
 
   if (isImage) {
-    buf = await sharp(buf).webp().toBuffer();
-  }
+  //@ts-ignore
+  buf = await sharp(buf).webp().toBuffer();
+}
 
 
   const placeholder = isImage ? (await getPlaiceholder(buf)).base64 : undefined;
@@ -51,10 +52,10 @@ export async function UploadFile({
 
     id = f!.id;
 
-    const s3File = (await import("bun")).s3.file(id);
-    await s3File.write(buf, {
-      type: resolvedMimeType,
-    });
+    // const s3File = (await import("bun")).s3.file(id);
+    // await s3File.write(buf, {
+    //   type: resolvedMimeType,
+    // });
   });
 
   return id!;
@@ -77,13 +78,13 @@ export const fileRouter = new Elysia({
         return { error: "File not found" };
       }
 
-      const { s3 } = await import("bun");
-      const s3File = s3.file(file.id);
+      // const { s3 } = await import("bun");
+      // const s3File = s3.file(file.id);
 
       set.headers["Content-Type"] = file.contentType;
       set.headers["Content-Disposition"] = `inline; filename="${encodeURIComponent(file.fileName)}"`;
 
-      return s3File.stream();
+      // return s3File.stream();
     },
     {
       params: t.Object({

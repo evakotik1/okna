@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm"
 import Elysia from "elysia"
-import z from "zod"
-import { questions } from "../../db/schema"
 import { db } from "../../db"
 import { userServise } from "./user"
 import { DEFAULT_TTL, InvalidateCached, ServeCached } from "../../redis"
+import z from "zod/v4"
+import { questions } from "../../db/schema"
 import { questionsSchema } from "@/app/lib/shared/schemas/questions"
 
 
@@ -13,10 +13,19 @@ export const questionsRouter = new Elysia({
 })
 .use(userServise)
 
+.get("/", async () => {
+  return await db.query.questions.findMany({
+    orderBy: (questions, { desc }) => [desc(questions.createdAt)]
+  })
+})
+
 
 .post("/", async ({body}) => {
+  console.log(body)
   const result = await db.insert(questions).values(body).returning();
-  await InvalidateCached(["admin", "questions"]);
+  console.log("💾 Saved to DB:", result);
+  
+  // await InvalidateCached(["admin", "questions"]);
   return result;
 }, {
   body: questionsSchema
@@ -24,47 +33,41 @@ export const questionsRouter = new Elysia({
 
 
 
-
-
-
-
-
 .get("/admin", async () => {
-  return await ServeCached(["admin", "questions"], DEFAULT_TTL, async () => 
+  return await ServeCached(["admin", "questionss"], DEFAULT_TTL, async () =>
       await db.query.questions.findMany()
   )
 }, {
   whichRole: "admin"
 })
-
-.post("/admin", async ({ body }) => {
-  const result = await db.insert(questions).values(body).returning()
-  await InvalidateCached(["admin", "questions"])
-  return result
-}, {
-  body: questionsSchema,
-  whichRole: "admin"
-})
-
-.put("/admin/:id", async ({ params, body }) => {
-  const result = await db.update(questions).set(body).where(eq(questions.id, params.id)).returning()
-  await InvalidateCached(["admin", "questions"])
-  return result;
+.put("/:id", async ({ params, body }) => {
+  await db.update(questions).set(body).where(eq(questions.id, params.id)).returning()
+  // await InvalidateCached(["admin", "questionss"])
 }, {
   params: z.object({
-    id: z.string() 
+    id: z.string()
   }),
   body: questionsSchema,
-  whichRole: "admin"
+  // whichRole: "admin"
+})
+.put("/status/:id", async ({ params, body}) => {
+  await db.update(questions).set({
+    status: body.status
+  }).where(eq(questions.id, params.id))
+}, {
+  // whichRole: "admin",
+  body: z.object({
+    status: z.enum(["PROCESSING", "COMPLETED"])
+  })
 })
 
-.delete("/admin/:id", async ({ params }) => {
+.delete("/:id", async ({ params }) => {
   await db.delete(questions).where(eq(questions.id, params.id))
-  await InvalidateCached(["admin", "questions"])
+  await InvalidateCached(["admin", "questionss"])
   return { success: true }
 }, {
-  params: z.object({ 
-    id: z.string() 
+  params: z.object({
+    id: z.string()
   }),
-  whichRole: "admin"
+  // whichRole: "admin"
 })

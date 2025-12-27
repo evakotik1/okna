@@ -55,7 +55,7 @@ export const reviews = pgTable("reviews", {
     email: varchar({ length: 255 }).notNull(),
     review: text("review").notNull(),
     consent: boolean().default(false).notNull(),
-    status: varchar('status', { length: 50 }).default('new'),
+    status: statusEnum("status").default("PROCESSING"),
 });
 
 
@@ -66,7 +66,7 @@ export const questions = pgTable("questions", {
     email: varchar({ length: 255 }).notNull(),
     message: text("message").notNull(),
     consent: boolean().default(false).notNull(),
-    status: varchar('status', { length: 50 }).default('new'),
+    status: statusEnum("status").default("PROCESSING"),
 });
 
 

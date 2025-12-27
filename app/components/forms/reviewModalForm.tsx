@@ -52,15 +52,12 @@ export default function ReviewModalForm() {
 		mutationFn: async (data: FormData) => {
 			const requestData = {
 				...data,
-				status: "new" as const,
-			};
-
-			const result = await api.reviews.post(requestData);
-			// if(result.error){
-			//     throw Error("error")
-			// }
-			// return result.data;
+			  };
+		  
+			  await api.reviews.post(requestData);
+		  // ...
 		},
+		
 		onSuccess: () => {
 			form.reset();
 			toast("Ваш отзыв успешно отправлен!");

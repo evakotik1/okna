@@ -16,19 +16,19 @@ import {
 } from "@/app/components/ui/select";
 import { Button } from "@/app/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { Question } from "@/app/lib/shared/types/question";
-import CreateUpdatequestions from "./create-update";
+import { Reviews } from "@/app/lib/shared/types/review";
+import CreateUpdateReview from "./create-update";
 
-function Deletequestion({ id }: { id: string }) {
+function DeleteReview({ id }: { id: string }) {
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const res = await api.questions({ id }).delete();
+      const res = await api.reviews({ id }).delete();
       if (res.error) throw res.error;
       return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["questions"],
+        queryKey: ["reviews"],
       });
       toast.success("Отзыв удален");
     },
@@ -56,26 +56,26 @@ function Deletequestion({ id }: { id: string }) {
   );
 }
 
-export function QuestionsTable({
-  initialquestions: initialData,
+export function ReviewsTable({
+  initialReviews: initialData,
 }: {
-  initialquestions: Question[] | null;
+  initialReviews: Reviews[] | null;
 }) {
-  const { data: questionsData } = useQuery({
-    queryKey: ["questions"],
+  const { data: reviewsData } = useQuery({
+    queryKey: ["reviews"],
     queryFn: async () => {
       try {
-        const res = await api.questions.get();
+        const res = await api.reviews.get();
         return Array.isArray(res.data) ? res.data : [];
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        console.error("Error fetching reviews:", error);
         return [];
       }
     },
     initialData: Array.isArray(initialData) ? initialData : [],
   });
 
-  const questions = Array.isArray(questionsData) ? questionsData : [];
+  const reviews = Array.isArray(reviewsData) ? reviewsData : [];
 
   const updateStatus = useMutation({
     mutationFn: async ({
@@ -85,13 +85,13 @@ export function QuestionsTable({
       id: string;
       status: "PROCESSING" | "COMPLETED";
     }) => {
-      const res = await api.questions.status({ id }).put({ status });
+      const res = await api.reviews.status({ id }).put({ status });
       if (res.error) throw res.error;
       return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["questions"],
+        queryKey: ["reviews"],
       });
       toast.success("Статус обновлен");
     },
@@ -100,11 +100,16 @@ export function QuestionsTable({
     },
   });
 
-  const columns: ColumnDef<Question>[] = [
+  const columns: ColumnDef<Reviews>[] = [
     {
       accessorKey: "name",
       header: "Имя",
       cell: ({ row }) => <p>{row.original.name}</p>,
+    },
+    {
+      accessorKey: "contractNumber",
+      header: "Номер договора",
+      cell: ({ row }) => <p>{row.original.contractNumber}</p>,
     },
     {
       accessorKey: "email",
@@ -116,11 +121,11 @@ export function QuestionsTable({
       ),
     },
     {
-      accessorKey: "message",
+      accessorKey: "review",
       header: "Отзыв",
       cell: ({ row }) => (
-        <div className="max-w-xs truncate" title={row.original.message}>
-          {row.original.message}
+        <div className="max-w-xs truncate" title={row.original.review}>
+          {row.original.review}
         </div>
       ),
     },
@@ -171,30 +176,30 @@ export function QuestionsTable({
       id: "actions",
       header: () => (
         <div className="w-full justify-end flex items-end">
-          <CreateUpdatequestions />
+          <CreateUpdateReview />
         </div>
       ),
       cell: ({ row }) => (
         <div className="flex flex-row items-center justify-center space-x-2">
-          <CreateUpdatequestions questions={row.original} />
-          <Deletequestion id={row.original.id} />
+          <CreateUpdateReview reviews={row.original} />
+          <DeleteReview id={row.original.id} />
         </div>
       ),
     },
   ];
 
-  if (questions.length === 0) {
+  if (reviews.length === 0) {
     return (
       <div className="p-4 lg:p-6 text-black">
         <h1 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6">
-          Вопросы ({questions.length})
+          Отзывы ({reviews.length})
         </h1>
         <div className="text-center py-8 text-muted-foreground">
-          Нет вопросов
+          Нет отзывов
         </div>
       </div>
     );
   }
 
-  return <DataTable columns={columns} data={questions} />;
+  return <DataTable columns={columns} data={reviews} />;
 }
