@@ -46,14 +46,14 @@ export const measurementRouter = new Elysia({
     id: z.string()
   }),
   body: measurementSchema,
-  // whichRole: "admin"
+  whichRole: "admin"
 })
 .put("/status/:id", async ({ params, body}) => {
   await db.update(measurement).set({
     status: body.status
   }).where(eq(measurement.id, params.id))
 }, {
-  // whichRole: "admin",
+  whichRole: "admin",
   body: z.object({
     status: z.enum(["PROCESSING", "COMPLETED"])
   })
@@ -67,5 +67,5 @@ export const measurementRouter = new Elysia({
   params: z.object({
     id: z.string()
   }),
-  // whichRole: "admin"
+  whichRole: "admin"
 })

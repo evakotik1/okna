@@ -51,7 +51,7 @@
 //     id: z.string()
 //   }),
 //   body: reviewsSchema,
-//   // whichRole: "admin"
+  // whichRole: "admin"
 // })
 
 // .put("/status/:id", async ({ params, body}) => {
@@ -59,7 +59,7 @@
 //     status: body.status
 //   }).where(eq(reviews.id, params.id))
 // }, {
-//   // whichRole: "admin",
+  // whichRole: "admin",
 //   body: z.object({
 //     status: z.enum(["PROCESSING", "COMPLETED"])
 //   })
@@ -95,7 +95,7 @@
 //   params: z.object({ 
 //     id: z.string() 
 //   }),
-//   // whichRole: "admin"
+  // whichRole: "admin"
 // })
 
 
@@ -150,14 +150,14 @@ export const reviewsRouter = new Elysia({
     id: z.string()
   }),
   body: reviewsSchema,
-  // whichRole: "admin"
+  whichRole: "admin"
 })
 .put("/status/:id", async ({ params, body}) => {
   await db.update(reviews).set({
     status: body.status
   }).where(eq(reviews.id, params.id))
 }, {
-  // whichRole: "admin",
+  whichRole: "admin",
   body: z.object({
     status: z.enum(["PROCESSING", "COMPLETED"])
   })
@@ -171,5 +171,5 @@ export const reviewsRouter = new Elysia({
   params: z.object({
     id: z.string()
   }),
-  // whichRole: "admin"
+  whichRole: "admin"
 })

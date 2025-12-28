@@ -162,7 +162,7 @@ export default function MeasurementModalForm({
 						<div className="px-9 md:px-14 py-8 flex flex-col justify-center items-center gap-7">
 							<div className="flex items-center justify-center gap-4">
 								<Image src={Ruler} alt="Ruler" width={30} height={25} />
-								<h2 className="md:text-2xl text-xl font-bold text-white">
+								<h2 className="md:text-2xl text-base font-bold text-white">
 									Вызвать замерщика на дом
 								</h2>
 							</div>

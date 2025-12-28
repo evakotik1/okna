@@ -201,5 +201,23 @@ export function ReviewsTable({
     );
   }
 
-  return <DataTable columns={columns} data={reviews} />;
+  return  (
+    <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
+
+      <div className="p-4 lg:p-6 border-b border-gray-300 bg-gray-50">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+          Отзывы ({reviews.length})
+        </h1>
+      </div>
+      
+      <div >
+        <div className="min-w-[700px] md:min-w-0 p-4">
+          <DataTable 
+            columns={columns} 
+            data={reviews}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

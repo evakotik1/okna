@@ -274,7 +274,7 @@ export default function Portfolio() {
 
 			{isModalOpen && selectedImage && (
 				<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-					<div className="bg-white rounded max-w-4xl w-full max-h-[700px] overflow-y-auto md:max-h-none md:overflow-visible relative">
+					<div className="bg-white rounded max-w-4xl w-full max-h-[600px] overflow-y-auto md:max-h-none md:overflow-visible relative">
 						<button
 							onClick={() => setIsModalOpen(false)}
 							className="absolute top-3 right-2 md:top-8 md:right-8text-black hover:text-orange-500 transition-colors z-50"

@@ -11,8 +11,8 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col md:flex-row gap-3 md:gap-6 lg:gap-8 items-center">
-            <p className="text-xs md:text-[14px] text-center hover:text-orange-300 transition-colors cursor-pointer"> Политика конфиденциальности </p>
-            <p className="text-xs md:text-[14px] text-center hover:text-orange-300 transition-colors cursor-pointer"> Пользовательское соглашение </p>
+            <a href="#" className="text-xs md:text-[14px] text-center hover:text-orange-300 transition-colors cursor-pointer">Политика конфиденциальности</a>
+            <a href="#" className="text-xs md:text-[14px] text-center hover:text-orange-300 transition-colors cursor-pointer">Пользовательское соглашение</a>
           </div>
 
         </div>

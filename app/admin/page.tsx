@@ -25,7 +25,7 @@ export default function Admin() {
           className="block p-6 bg-orange-50 border-2 border-orange-200 rounded-xl "
         >
           <h2 className="text-xl font-semibold text-orange-800 mb-2">
-            Расчеты
+          Заявки на расчеты
           </h2>
 
         </Link>

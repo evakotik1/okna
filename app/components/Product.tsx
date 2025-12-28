@@ -150,7 +150,7 @@ export default function Products() {
 
   return (
     <section className="pt-24" id="products">
-      <div className="container mx-auto max-w-[1200px] px-14 md:px-0">
+      <div className="container mx-auto max-w-[1200px] px-12 md:px-0">
 
         <div className="flex flex-col gap-10">
 
@@ -158,7 +158,7 @@ export default function Products() {
           <div className="flex justify-center gap-1 md:gap-4 mb-10 ">
             {tabs.map((tab) => (
               <button key={tab.id} onClick={() => handleTabClick(tab.id)}
-                className={`px-4 py-2 text-[14px] md:text-[16px] md:px-6  ${ 
+                className={`px-3 py-2 text-[14px] md:text-[16px] md:px-6  ${ 
                   activeTab === tab.id
                     ? "bg-orange-500 font-semibold text-white rounded-sm"
                     : "text-gray-700 hover:text-orange-500"
@@ -195,7 +195,7 @@ export default function Products() {
                       <Image src={product.image} alt="product" fill className="object-cover" />
                     </div>
 
-                    <div className="w-full md:w-1/2 p-10 pt-6 md:pt-16">
+                    <div className="w-full md:w-1/2 md:p-10 p-4 pt-6 md:pt-16">
                       <div className="flex gap-4 flex-col justify-center">
 
                         <div className="flex flex-col gap-5">
@@ -207,30 +207,47 @@ export default function Products() {
 
                         <div className="space-y-3 py-5">
 
-                          <div className="flex items-center">
-                            <p className="text-blacktext-base flex-shrink-0"> {product.parameter1} </p>
-                            <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px]"></div>
-                            <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px]"> {product.value1}
-                            </p>
-                          </div>
+                        <div className="flex items-center">
+                          <p className="text-black text-sm md:text-base flex-shrink-0 whitespace-nowrap md:whitespace-normal">
+                            {product.parameter1}
+                          </p>
+                          <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px] mx-2"></div>
+                          <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px] whitespace-nowrap">
+                            {product.value1}
+                          </p>
+                        </div>
+                        
                           
-                          <div className="flex items-center">
-                            <p className="text-black text-sm md:text-base flex-shrink-0"> {product.parameter2} </p>
-                            <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px]"></div>
-                            <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px]"> {product.width2} </p>
-                          </div>
+                        <div className="flex items-center">
+                          <p className="text-black text-sm md:text-base flex-shrink-0 whitespace-nowrap md:whitespace-normal">
+                            {product.parameter2}
+                          </p>
+                          <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px] mx-2"></div>
+                          <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px] whitespace-nowrap">
+                            {product.width2}
+                          </p>
+                        </div>
                           
-                          <div className="flex items-center">
-                            <p className="text-black text-sm md:text-base flex-shrink-0"> {product.parameter3} </p>
-                            <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px]"></div>
-                            <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px]"> {product.chambers3} </p>
-                          </div>
+                        <div className="flex items-center">
+                          <p className="text-black text-sm md:text-base flex-shrink-0 whitespace-nowrap md:whitespace-normal">
+                            {product.parameter3}
+                          </p>
+                          <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px] mx-2"></div>
+                          <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px] whitespace-nowrap">
+                            {product.chambers3}
+                          </p>
+                        </div>
                           
-                          <div className="flex items-center">
-                            <p className="text-black text-sm md:text-base flex-shrink-0"> {product.parameter4} </p>
-                            <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px]"></div>
-                            <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px]"> {product.resistance4} </p>
-                          </div>
+                        <div className="flex items-center">
+                          <p className="text-black text-sm md:text-base flex-shrink-0 whitespace-nowrap md:whitespace-normal">
+                            {product.parameter4}
+                          </p>
+                          <div className="flex-grow border-b border-dotted border-[#CFCFCF] h-[1px] mx-2"></div>
+                          <p className="font-medium text-left text-sm md:text-base min-w-[80px] md:min-w-[100px] whitespace-nowrap">
+                            {product.resistance4}
+                          </p>
+                        </div>
+
                         </div>
 
                         </div>
