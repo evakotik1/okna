@@ -186,7 +186,7 @@ return (
                     
                     <button onClick={() => setIsModalOpen(false)} className="absolute top-4 md:top-8 right-4 md:right-8 text-black hover:text-orange-500 z-50">
                     <Image
-                        src="/X.svg"
+                        src="/krestik.png"
                         alt="Закрыть"
                         width={7}
                         height={7}

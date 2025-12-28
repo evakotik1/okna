@@ -92,7 +92,7 @@ export default function ReviewModalForm() {
 								className="absolute right-5 top-5  hover:text-gray-700"
 							>
 								<Image
-									src="/X.svg"
+									src="/krestik.png"
 									alt="Закрыть"
 									width={7}
 									height={7}

@@ -277,10 +277,10 @@ export default function Portfolio() {
 					<div className="bg-white rounded max-w-4xl w-full max-h-[600px] overflow-y-auto md:max-h-none md:overflow-visible relative">
 						<button
 							onClick={() => setIsModalOpen(false)}
-							className="absolute top-3 right-2 md:top-8 md:right-8text-black hover:text-orange-500 transition-colors z-50"
+							className="absolute top-3 right-2 md:top-4 md:right-4 text-black hover:text-orange-500 transition-colors z-50"
 						>
 							<Image
-								src="/X.svg"
+								src="/krestik.png"
 								alt="Закрыть"
 								width={7}
 								height={7}

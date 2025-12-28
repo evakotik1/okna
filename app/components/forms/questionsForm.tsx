@@ -194,7 +194,7 @@ export default function QuestionsForm() {
 					<div className="flex justify-center pt-2">
 						<Button
 							type="submit"
-							className="bg-[#2F2F51] py-4 px-10 w-full max-w-[280px] text-white font-medium hover:bg-[#4C4C79] transition-colors"
+							className="bg-[#2F2F51] py-6 px-10 w-full max-w-[280px] text-white font-medium hover:bg-[#4C4C79] transition-colors"
 							disabled={isLoading || isSuccess}
 						>
 							{isLoading
