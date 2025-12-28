@@ -54,7 +54,7 @@ export default function Header() {
                             <div className="flex justify-end mb-8">
                                 <button onClick={() => setIsMenuOpen(false)}>
                                 <Image
-                        src="/X.svg"
+                        src="/krestik.png"
                         alt="Закрыть"
                         width={7}
                         height={7}
